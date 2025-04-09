@@ -6,14 +6,15 @@ from entities.entity import Entity
 @dataclass
 class PurchaseProduct(Entity):
     name: str = None
-    cpf: str = None
+    price: float = None
+    quantity: int = None
 
 
 @dataclass
 class Customer(Entity):
     name: str = None
-    price: float = None
-    quantity: int = None
+    cpf: str = None
+    
 
 
 @dataclass

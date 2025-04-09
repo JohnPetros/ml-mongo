@@ -24,9 +24,9 @@ class CreatePurchaseCommand(Command):
                 )
             )
             choice = self.input.select(
-                "Deseja adicionar mais produtos?", options=["Sim", "Não"]
+                "Deseja adicionar mais produtos?", options=[("Sim", "yes"), ("Não", "no")]
             )
-            if choice == "Não":
+            if choice == "no":
                 break
 
         purchase = Purchase(user=user, products=products)
