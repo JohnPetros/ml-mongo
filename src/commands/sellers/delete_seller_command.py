@@ -14,4 +14,5 @@ class DeleteSellerCommand(Command):
 
         self.repository.remove(seller)
         self.output.loading()
+        self.output.clear()
         self.output.success("Vendedor removido com sucesso!")

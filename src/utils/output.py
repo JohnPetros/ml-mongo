@@ -49,6 +49,6 @@ class Output:
                 f"[bright_yellow] {title} [/bright_yellow]",
                 border_style="bright_blue",
                 padding=(1, 1),
-                title="[bold yellow]🔥 🔥",
+                title="[bold yellow]🤝",
             )
         )

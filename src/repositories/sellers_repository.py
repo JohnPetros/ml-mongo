@@ -9,7 +9,14 @@ class SellersRepository:
         self.collection = db["vendedor"]
 
     def add(self, seller: Seller):
-        self.collection.insert_one(seller.__dict__)
+        self.collection.insert_one(
+            {
+                "name": seller.name,
+                "email": seller.email,
+                "cpf": seller.cpf,
+                "phone": seller.phone,
+            }
+        )
 
     def findAll(self):
         documents = self.collection.find()

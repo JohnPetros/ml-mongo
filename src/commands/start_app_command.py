@@ -1,5 +1,6 @@
 from commands.command import Command
 from commands.sellers.show_seller_menu_command import ShowSellersMenuCommand
+from commands.products.show_product_menu_command import ShowProductsMenuCommand
 
 
 class StartAppCommand(Command):
@@ -11,9 +12,10 @@ class StartAppCommand(Command):
                 "Home",
                 [
                     ("1 - Área de clientes", "customers-menu"),
-                    ("2 - Área de compras", "purchases-menu"),
+                    ("2 - Área de produtos", "products-menu"),
                     ("3 - Área de vendedores", "sellers-menu"),
-                    ("4 - Sair", "exit"),
+                    ("4 - Área de compras", "purchases-menu"),
+                    ("5 - Sair", "exit"),
                 ],
             )
             command = None
@@ -22,6 +24,8 @@ class StartAppCommand(Command):
                 case "customers-menu":
                     self.output.title("Cliente")
                     self.output.success("Cliente")
+                case "products-menu":
+                    command = ShowProductsMenuCommand()
                 case "purchases-menu":
                     self.output.title("Compra")
                     self.output.success("Compra")
