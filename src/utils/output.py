@@ -8,10 +8,10 @@ from rich.console import Console
 
 class Output:
     def __init__(self):
-        self.console = Console(width=72)
+        self.console = Console(width=150)
 
     def table(self, columns: list, rows: list[list]):
-        table = Table(expand=True, leading=1)
+        table = Table(expand=False, leading=1)
 
         for column in columns:
             table.add_column(column, justify="center", style="cyan", no_wrap=True)
@@ -49,6 +49,6 @@ class Output:
                 f"[bright_yellow] {title} [/bright_yellow]",
                 border_style="bright_blue",
                 padding=(1, 1),
-                title="[bold yellow]🤝",
+                title="[bold yellow]Mercado Livre 🤝",
             )
         )

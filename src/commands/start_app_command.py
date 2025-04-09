@@ -1,5 +1,6 @@
 from commands.command import Command
-from commands.sellers.show_seller_menu_command import ShowSellersMenuCommand
+from commands.users.show_users_menu_command import ShowUsersMenuCommand
+from commands.sellers.show_sellers_menu_command import ShowSellersMenuCommand
 from commands.products.show_product_menu_command import ShowProductsMenuCommand
 
 
@@ -22,8 +23,7 @@ class StartAppCommand(Command):
 
             match choice:
                 case "customers-menu":
-                    self.output.title("Cliente")
-                    self.output.success("Cliente")
+                    command = ShowUsersMenuCommand()
                 case "products-menu":
                     command = ShowProductsMenuCommand()
                 case "purchases-menu":

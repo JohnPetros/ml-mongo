@@ -11,6 +11,8 @@ class DeleteProductCommand(Command):
     def run(self):
         command = SelectProductCommand()
         product = command.run()
+        if product is None:
+            return
 
         self.repository.remove(product)
         self.output.loading()

@@ -11,6 +11,8 @@ class UpdateSellerCommand(Command):
     def run(self):
         command = SelectSellerCommand()
         seller = command.run()
+        if seller is None:
+            return
 
         value = self.input.select(
             "Qual valor deseja atualizar?",
