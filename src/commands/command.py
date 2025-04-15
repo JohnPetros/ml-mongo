@@ -1,8 +1,9 @@
+from abc import ABC
 from utils.input import Input
 from utils.output import Output
 
 
-class Command:
+class Command(ABC):
     def __init__(self):
         self.is_running = True
         self.input = Input()

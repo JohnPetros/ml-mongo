@@ -1,7 +1,9 @@
 from commands.command import Command
-from commands.purchases.create_seller_command import CreateSellerCommand
-from commands.purchases.list_purchases_command import ListpurchasesCommand
-from commands.purchases.update_seller_command import UpdateSellerCommand
+from commands.purchases.create_purchase_command import CreatePurchaseCommand
+from commands.purchases.list_purchases_command import ListPurchasesCommand
+from commands.purchases.update_purchase_status_command import (
+    UpdatePurchaseStatusCommand,
+)
 
 
 class ShowPurchasesMenuCommand(Command):
@@ -14,8 +16,8 @@ class ShowPurchasesMenuCommand(Command):
                 "Opções",
                 [
                     ("Listar compras", "list-purchases"),
-                    ("Fazer compra", "create-purchase"),
-                    ("Atualizar status de compra", "update-purchase-status"),
+                    ("Fazer uma compra", "create-purchase"),
+                    ("Atualizar o status de uma compra", "update-purchase-status"),
                     ("Voltar", "exit"),
                 ],
             )
@@ -23,13 +25,11 @@ class ShowPurchasesMenuCommand(Command):
 
             match choice:
                 case "list-purchases":
-                    command = ListpurchasesCommand()
-                case "create-seller":
-                    command = CreateSellerCommand()
-                case "update-seller":
-                    command = UpdateSellerCommand()
-                case "delete-seller":
-                    command = DeleteSellerCommand()
+                    command = ListPurchasesCommand()
+                case "create-purchase":
+                    command = CreatePurchaseCommand()
+                case "update-purchase-status":
+                    command = UpdatePurchaseStatusCommand()
                 case "exit":
                     self.exit()
                 case _:
