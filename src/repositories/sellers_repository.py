@@ -27,6 +27,14 @@ class SellersRepository:
         for seller in documents:
             sellers.append(self.__map_seller(seller))
         return sellers
+    
+    def findByEmail(self, email: str):
+        document = self.collection.find_one({"email": email})
+        return self.__map_seller(document[0]) if document else None
+    
+    def findByCpf(self, cpf: str):
+        document = self.collection.find_one({"cpf": cpf})
+        return self.__map_seller(document[0]) if document else None
 
     def update(self, seller: Seller):
         self.collection.update_one(

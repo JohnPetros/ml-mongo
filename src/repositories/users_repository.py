@@ -48,6 +48,14 @@ class UsersRepository:
         for user in documents:
             users.append(self.__map_user(user))
         return users
+    
+    def findByEmail(self, email: str):
+        document = self.collection.find_one({"email": email})
+        return self.__map_seller(document[0]) if document else None
+    
+    def findByCpf(self, cpf: str):
+        document = self.collection.find_one({"cpf": cpf})
+        return self.__map_seller(document[0]) if document else None
 
     def update(self, user: User):
         self.collection.update_one(

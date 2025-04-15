@@ -1,6 +1,6 @@
 from commands.command import Command
 from entities.purchase import Purchase, PurchaseProduct
-from repositories.purchase_repository import PurchasesRepository
+from repositories.purchases_repository import PurchasesRepository
 from commands.users.select_user_command import SelectUserCommand
 from commands.products.select_product_command import SelectProductCommand
 

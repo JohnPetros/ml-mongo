@@ -11,24 +11,22 @@ class RemoveFavoriteCommand(Command):
     def run(self):
         command = ListFavoritesCommand()
         user = command.run()
-
-        if user.favorites is None:
+        
+        if not user:
             return
 
-        while self.is_running:
-            favorite_id = self.input.text("ID do favorito:")
+        if not len(user.favorites):
+                self.output.error("Favoritos não encontrado")
+                return
+
+        favorite_id = self.input.text("ID do favorito:")
+        favorite = None
+        while not favorite:
             favorite = list(
-                filter(lambda user: user.get_id() == favorite_id, user.favorites)
-            )
-
-            if len(favorite):
-                self.exit()
-                return favorite[0]
-
-            self.output.error("Favorito não encontrado")
+                filter(lambda favorite: favorite.id[-4:] == favorite_id, user.favorites)
+            )[0]
 
         user.remove_favorite(favorite)
-
         self.repository.update(user)
         self.output.loading()
         self.output.clear()

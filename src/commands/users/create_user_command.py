@@ -18,7 +18,15 @@ class CreateUserCommand(Command):
 
         name = self.input.text("Nome:")
         email = self.input.text("Email:", validator=EmailValidator())
+        user = self.repository.findByEmail(email)
+        if user:
+            self.output.error("Email já cadastrado")
+            return
         cpf = self.input.text("CPF:", validator=CpfValidator())
+        user = self.repository.findByCpf(cpf)
+        if user:
+            self.output.error("CPF já cadastrado")
+            return
         phone = self.input.text("Telefone:", validator=PhoneValidator())
         street = self.input.text("Rua:")
         neighbourhood = self.input.text("Bairro:")

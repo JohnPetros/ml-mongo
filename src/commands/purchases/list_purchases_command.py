@@ -1,5 +1,5 @@
 from commands.command import Command
-from repositories.purchase_repository import PurchasesRepository
+from repositories.purchases_repository import PurchasesRepository
 
 
 class ListPurchasesCommand(Command):

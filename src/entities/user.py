@@ -38,5 +38,18 @@ class User(Entity):
         favorire = Favorite(id=product.id, name=product.name, price=product.price)
         self.favorites.append(favorire)
 
-    def remove_favorite(self, favorite: Favorite):
-        self.favorites.remove(favorite)
+    def remove_favorite(self, _favorite: Favorite):
+        favorites = []
+        for favorite in self.favorites:
+            if favorite.id != _favorite.id:
+                favorites.append(favorite)
+                break
+        self.favorites = favorites
+        
+    def has_favorite(self, product: Product):
+        if not len(self.favorites) or self.favorites is None:
+            return False
+        
+        ids = [favorite.id for favorite in self.favorites]
+
+        return product.id in ids

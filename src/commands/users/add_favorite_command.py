@@ -12,8 +12,12 @@ class AddFavoriteCommand(Command):
     def run(self):
         user = self.__select_user()
         product = self.__select_product()
-        user.add_favorite(product)
+        
+        if user.has_favorite(product):
+            self.output.error("Produto já está nos favoritos.")
+            return
 
+        user.add_favorite(product)
         self.repository.update(user)
         self.output.loading()
         self.output.clear()

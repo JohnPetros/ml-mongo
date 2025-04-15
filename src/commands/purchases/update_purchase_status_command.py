@@ -1,4 +1,4 @@
-from repositories.purchase_repository import PurchasesRepository
+from repositories.purchases_repository import PurchasesRepository
 from commands.command import Command
 from commands.purchases.select_purchase_command import SelectPurchaseCommand
 
