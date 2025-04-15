@@ -1,6 +1,6 @@
 from commands.command import Command
 from entities.purchase import Purchase, PurchaseProduct
-from repositories.sellers_repository import SellersRepository
+from repositories.purchase_repository import PurchasesRepository
 from commands.users.select_user_command import SelectUserCommand
 from commands.products.select_product_command import SelectProductCommand
 
@@ -8,28 +8,46 @@ from commands.products.select_product_command import SelectProductCommand
 class CreatePurchaseCommand(Command):
     def __init__(self):
         super().__init__()
-        self.repository = SellersRepository()
+        self.repository = PurchasesRepository()
 
     def run(self):
         self.output.title("Fazendo compra")
         user = self.__select_user()
         products = list()
 
+        if not user:
+            return
+
         while True:
             product = self.__select_product()
+
+            if not product:
+                self.output.error("Nenhum produto encontrado")
+                return
+
+            is_product_already_included = any(product.id == p.id for p in products)
+            if is_product_already_included:
+                self.output.error("Produto já adicionado")
+                continue
+
             product_quantity = int(self.input.text("Quantidade do produto:"))
             products.append(
                 PurchaseProduct(
-                    id=product.id, name=product.name, quantity=product_quantity
+                    id=product.id,
+                    name=product.name,
+                    price=product.price,
+                    quantity=product_quantity,
                 )
             )
             choice = self.input.select(
-                "Deseja adicionar mais produtos?", options=["Sim", "Não"]
+                "Deseja adicionar mais produtos?",
+                [("Sim", "yes"), ("Não", "no")],
             )
-            if choice == "Não":
+            if choice == "no":
                 break
 
-        purchase = Purchase(user=user, products=products)
+        purchase = Purchase(customer=user, products=products, status="Pendente")
+        purchase.calculate_total_price()
         self.repository.add(purchase)
         self.output.loading()
         self.output.clear()
@@ -45,8 +63,5 @@ class CreatePurchaseCommand(Command):
 
     def __select_product(self):
         command = SelectProductCommand()
-        user = command.run()
-        if user is None:
-            return
-
-        return user
+        product = command.run()
+        return product

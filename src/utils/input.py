@@ -1,4 +1,6 @@
 from questionary import Choice, Style, select, text
+from utils.output import Output
+from validators.validator import Validator
 
 
 class Input:
@@ -18,5 +20,12 @@ class Input:
             ),
         ).ask()
 
-    def text(self, messege: str):
-        return text(messege).ask()
+    def text(self, messege: str, is_required: bool = True, validator: Validator = None):
+        while True:
+            value = text(messege).ask()
+            if is_required and not value:
+                Output().error("Campo obrigatório")
+                continue
+            if validator and not validator.validate(value):
+                continue
+            return value

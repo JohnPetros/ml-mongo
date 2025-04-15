@@ -12,6 +12,10 @@ class SelectSellerCommand(Command):
 
     def run(self) -> Seller:
         sellers = self.repository.findAll()
+        if not sellers:
+            self.output.error("Nenhum vendedor encontrado. Cadastre um primeiro")
+            return
+
         command = ListSellersCommand()
         command.run()
 

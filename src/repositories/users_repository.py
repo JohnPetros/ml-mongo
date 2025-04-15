@@ -103,6 +103,7 @@ class UsersRepository:
             ),
             favorites=[
                 Favorite(
+                    id=str(favorite["_id"]),
                     name=favorite["name"],
                     price=favorite["price"],
                 )

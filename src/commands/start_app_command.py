@@ -2,6 +2,7 @@ from commands.command import Command
 from commands.users.show_users_menu_command import ShowUsersMenuCommand
 from commands.sellers.show_sellers_menu_command import ShowSellersMenuCommand
 from commands.products.show_product_menu_command import ShowProductsMenuCommand
+from commands.purchases.show_purchases_menu_command import ShowPurchasesMenuCommand
 
 
 class StartAppCommand(Command):
@@ -26,11 +27,10 @@ class StartAppCommand(Command):
                     command = ShowUsersMenuCommand()
                 case "products-menu":
                     command = ShowProductsMenuCommand()
-                case "purchases-menu":
-                    self.output.title("Compra")
-                    self.output.success("Compra")
                 case "sellers-menu":
                     command = ShowSellersMenuCommand()
+                case "purchases-menu":
+                    command = ShowPurchasesMenuCommand()
                 case "exit":
                     self.exit()
                     self.output.clear()

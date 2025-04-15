@@ -1,6 +1,7 @@
 from commands.command import Command
 from repositories.products_repository import ProductsRepository
 from commands.products.select_product_command import SelectProductCommand
+from validators.float_validator import FloatValidator
 
 
 class UpdateProductCommand(Command):
@@ -10,14 +11,17 @@ class UpdateProductCommand(Command):
 
     def run(self):
         command = SelectProductCommand()
-        seller = command.run()
+        product = command.run()
+
+        if product is None:
+            return
 
         value = self.input.select(
             "Qual valor deseja atualizar?",
             [
-                (f"Nome ({seller.name})", "name"),
-                (f"Preço ({seller.price})", "price"),
-                (f"Descrição ({seller.description})", "description"),
+                (f"Nome ({product.name})", "name"),
+                (f"Preço ({product.price})", "price"),
+                (f"Descrição ({product.description})", "description"),
                 ("Voltar", "exit"),
             ],
         )
@@ -25,20 +29,20 @@ class UpdateProductCommand(Command):
         match value:
             case "name":
                 name = self.input.text("Novo nome:")
-                seller.name = name
+                product.name = name
             case "price":
-                price = self.input.text("Novo preço:")
-                seller.price = price
+                price = self.input.text("Novo preço R$:", validator=FloatValidator())
+                product.price = price
             case "description":
                 description = self.input.text("Nova descrição:")
-                seller.description = description
+                product.description = description
             case "exit":
                 self.exit()
                 self.output.clear()
                 return
 
-        self.repository.update(seller)
+        self.repository.update(product)
         self.output.loading()
         self.output.clear()
         self.output.success("Vendedor atualizado com sucesso!")
-        print(seller)
+        print(product)

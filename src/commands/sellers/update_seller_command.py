@@ -1,6 +1,9 @@
 from commands.command import Command
 from repositories.sellers_repository import SellersRepository
 from commands.sellers.select_seller_command import SelectSellerCommand
+from validators.phone_validator import PhoneValidator
+from validators.cpf_validator import CpfValidator
+from validators.email_validator import EmailValidator
 
 
 class UpdateSellerCommand(Command):
@@ -30,14 +33,14 @@ class UpdateSellerCommand(Command):
                 name = self.input.text("Novo nome:")
                 seller.name = name
             case "email":
-                email = self.input.text("Novo email:")
+                email = self.input.text("Novo email:", validator=EmailValidator())
                 seller.email = email
             case "cpf":
-                cpf = self.input.text("Novo CPF:")
+                cpf = self.input.text("Novo CPF:", validator=CpfValidator())
                 seller.cpf = cpf
             case "phone":
-                telefone = self.input.text("Novo telefone:")
-                seller.telefone = telefone
+                phone = self.input.text("Novo telefone:", validator=PhoneValidator())
+                seller.phone = phone
             case "exit":
                 self.exit()
                 self.output.clear()

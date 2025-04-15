@@ -1,6 +1,11 @@
 from commands.command import Command
 from repositories.users_repository import UsersRepository
 from commands.users.select_user_command import SelectUserCommand
+from validators.email_validator import EmailValidator
+from validators.cpf_validator import CpfValidator
+from validators.phone_validator import PhoneValidator
+from validators.int_validator import IntValidator
+from validators.zipcode_validator import ZipcodeValidator
 
 
 class UpdateUserCommand(Command):
@@ -40,25 +45,25 @@ class UpdateUserCommand(Command):
                 name = self.input.text("Novo nome:")
                 user.name = name
             case "email":
-                email = self.input.text("Novo email:")
+                email = self.input.text("Novo email:", validator=EmailValidator())
                 user.email = email
             case "cpf":
-                cpf = self.input.text("Novo CPF:")
+                cpf = self.input.text("Novo CPF:", validator=CpfValidator())
                 user.cpf = cpf
             case "phone":
-                phone = self.input.text("Novo telefone:")
+                phone = self.input.text("Novo telefone:", validator=PhoneValidator())
                 user.phone = phone
             case "zipcode":
-                zipcode = self.input.text("Novo CEP:")
+                zipcode = self.input.text("Novo CEP:", validator=ZipcodeValidator())
                 user.address.zipcode = zipcode
             case "neighbourhood":
                 neighbourhood = self.input.text("Novo bairro:")
                 user.address.neighbourhood = neighbourhood
             case "number":
-                number = self.input.text("Novo número:")
+                number = self.input.text("Novo número:", validator=IntValidator())
                 user.address.number = number
             case "city":
-                city = self.input.text("Novo número:")
+                city = self.input.text("Nova cidade:")
                 user.address.city = city
             case "street":
                 street = self.input.text("Nova rua:")
@@ -67,7 +72,7 @@ class UpdateUserCommand(Command):
                 state = self.input.text("Novo estado:")
                 user.address.state = state
             case "complement":
-                complement = self.input.text("Novo complemento:")
+                complement = self.input.text("Novo complemento:", is_required=False)
                 user.address.complement = complement
             case "exit":
                 self.exit()

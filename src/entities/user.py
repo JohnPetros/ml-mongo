@@ -17,6 +17,7 @@ class Address:
 
 @dataclass
 class Favorite(Entity):
+    id: str = None
     name: str = None
     price: float = None
 

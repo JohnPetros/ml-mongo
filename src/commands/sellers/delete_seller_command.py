@@ -9,6 +9,11 @@ class DeleteSellerCommand(Command):
         self.repository = SellersRepository()
 
     def run(self):
+        sellers = self.repository.findAll()
+        if not sellers:
+            self.output.error("Nenhum vendedor encontrado. Cadastre um primeiro")
+            return
+
         command = SelectSellerCommand()
         seller = command.run()
 

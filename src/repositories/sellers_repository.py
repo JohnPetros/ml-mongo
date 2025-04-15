@@ -46,9 +46,9 @@ class SellersRepository:
 
     def __map_seller(self, document):
         return Seller(
+            id=str(document["_id"]),
             name=document["name"],
             email=document["email"],
             cpf=document["cpf"],
             phone=document["phone"],
-            id=str(document["_id"]),
         )

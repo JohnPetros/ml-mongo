@@ -1,6 +1,11 @@
 from commands.command import Command
 from entities.user import User, Address
 from repositories.users_repository import UsersRepository
+from validators.email_validator import EmailValidator
+from validators.cpf_validator import CpfValidator
+from validators.phone_validator import PhoneValidator
+from validators.int_validator import IntValidator
+from validators.zipcode_validator import ZipcodeValidator
 
 
 class CreateUserCommand(Command):
@@ -12,16 +17,16 @@ class CreateUserCommand(Command):
         self.output.title("Cadastrando usuário")
 
         name = self.input.text("Nome:")
-        email = self.input.text("Email:")
-        cpf = self.input.text("CPF:")
-        phone = self.input.text("Telefone:")
+        email = self.input.text("Email:", validator=EmailValidator())
+        cpf = self.input.text("CPF:", validator=CpfValidator())
+        phone = self.input.text("Telefone:", validator=PhoneValidator())
         street = self.input.text("Rua:")
         neighbourhood = self.input.text("Bairro:")
-        number = self.input.text("Número:")
+        number = self.input.text("Número:", validator=IntValidator())
         city = self.input.text("Cidade:")
         state = self.input.text("Estado:")
-        zipcode = self.input.text("CEP:")
-        complement = self.input.text("Complemento (opcional):")
+        zipcode = self.input.text("CEP:", validator=ZipcodeValidator())
+        complement = self.input.text("Complemento (opcional):", is_required=False)
 
         user = User(
             name=name,

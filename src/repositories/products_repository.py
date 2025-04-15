@@ -15,7 +15,7 @@ class ProductsRepository:
                 "price": product.price,
                 "description": product.description,
                 "seller": {
-                    "id": ObjectId(product.seller_id),
+                    "_id": ObjectId(product.seller_id),
                     "name": product.seller_name,
                 },
             }
