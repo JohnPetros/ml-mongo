@@ -12,6 +12,7 @@ class PurchaseProduct(Entity):
 
 @dataclass
 class Customer(Entity):
+    id: str = None
     name: str = None
     cpf: str = None
 

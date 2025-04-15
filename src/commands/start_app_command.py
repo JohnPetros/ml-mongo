@@ -27,6 +27,9 @@ class StartAppCommand(Command):
                     command = ShowUsersMenuCommand()
                 case "products-menu":
                     command = ShowProductsMenuCommand()
+                case "purchases-menu":
+                    self.output.title("Compra")
+                    self.output.success("Compra")
                 case "sellers-menu":
                     command = ShowSellersMenuCommand()
                 case "purchases-menu":

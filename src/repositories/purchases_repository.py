@@ -1,6 +1,6 @@
 from bson import ObjectId
 
-from entities.purchase import Purchase, PurchaseProduct, Customer
+from entities.purchase import Purchase, Customer, PurchaseProduct
 from repositories.mongodb import db
 
 
@@ -9,16 +9,11 @@ class PurchasesRepository:
         self.collection = db["compra"]
 
     def add(self, purchase: Purchase):
-        print(purchase)
         self.collection.insert_one(
             {
-                "totalPrice": purchase.total_price,
+                "name": purchase.name,
                 "status": purchase.status,
-                "customer": {
-                    "_id": ObjectId(purchase.customer.id),
-                    "name": purchase.customer.name,
-                    "cpf": purchase.customer.cpf,
-                },
+                "totalPrice": purchase.calculate_total_price(),
                 "products": [
                     {
                         "_id": ObjectId(product.id),
@@ -28,6 +23,11 @@ class PurchasesRepository:
                     }
                     for product in purchase.products
                 ],
+                "customer": {
+                    "_id": ObjectId(purchase.customer.id),
+                    "name": purchase.customer.name,
+                    "cpf": purchase.customer.name,
+                },
             }
         )
 
@@ -42,7 +42,6 @@ class PurchasesRepository:
         return purchases
 
     def update(self, purchase: Purchase):
-        print(purchase.status)
         self.collection.update_one(
             {"_id": ObjectId(purchase.id)},
             {
@@ -59,17 +58,18 @@ class PurchasesRepository:
         return Purchase(
             id=str(document["_id"]),
             status=document["status"],
+            totalPrice=document["customer"]["totalPrice"],
             products=[
                 PurchaseProduct(
                     id=str(product["_id"]),
                     name=product["name"],
-                    price=float(product["price"]),
+                    price=product["price"],
                     quantity=product["quantity"],
                 )
                 for product in document["products"]
             ],
             customer=Customer(
-                id=str(document["customer"]["_id"]),
+                id=str(document["_id"]),
                 name=document["customer"]["name"],
                 cpf=document["customer"]["cpf"],
             ),
