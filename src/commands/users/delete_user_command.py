@@ -17,4 +17,4 @@ class DeleteUserCommand(Command):
         self.repository.remove(user)
         self.output.loading()
         self.output.clear()
-        self.output.success("Vendedor removido com sucesso!")
+        self.output.success("Usuário removido com sucesso!")

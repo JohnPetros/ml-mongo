@@ -1,5 +1,7 @@
 from commands.command import Command
 from repositories.sellers_repository import SellersRepository
+from formatters.cpf_formatter import CpfFormatter
+from formatters.phone_formatter import PhoneFormatter
 
 
 class ListSellersCommand(Command):
@@ -21,8 +23,8 @@ class ListSellersCommand(Command):
                     seller.get_id(),
                     seller.name,
                     seller.email,
-                    seller.cpf,
-                    seller.phone,
+                    CpfFormatter.format(seller.cpf),
+                    PhoneFormatter.format(seller.phone),
                 ]
                 for seller in sellers
             ],
