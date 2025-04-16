@@ -1,6 +1,7 @@
 from bson import ObjectId
 
 from entities.product import Product
+from entities.seller import Seller
 from repositories.mongodb import db
 
 
@@ -45,6 +46,11 @@ class ProductsRepository:
 
     def remove(self, product: Product):
         self.collection.delete_one({"_id": ObjectId(product.id)})
+
+    def removeAllBySeller(self, seller: Seller):
+        document = self.collection.find({"seller._id": ObjectId(seller.id)})
+        print(document)
+        self.collection.delete_many({"seller._id": ObjectId(seller.id)})
 
     def __map_product(self, document):
         return Product(
