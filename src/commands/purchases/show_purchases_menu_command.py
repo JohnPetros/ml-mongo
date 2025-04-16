@@ -7,7 +7,6 @@ from commands.purchases.update_purchase_status_command import (
 
 
 class ShowPurchasesMenuCommand(Command):
-
     def run(self):
         self.output.title("Menu de compras")
 
