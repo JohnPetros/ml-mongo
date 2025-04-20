@@ -1,4 +1,4 @@
-from questionary import Choice, Style, select, text
+from questionary import Choice, Style, select, text, password
 from utils.output import Output
 from validators.validator import Validator
 
@@ -27,5 +27,13 @@ class Input:
                 Output().error("Campo obrigatório")
                 continue
             if validator and not validator.validate(value):
+                continue
+            return value
+
+    def password(self):
+        while True:
+            value = password("Senha").ask()
+            if not value:
+                Output().error("Campo obrigatório")
                 continue
             return value
