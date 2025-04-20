@@ -8,7 +8,7 @@ from rich.console import Console
 
 class Output:
     def __init__(self):
-        self.console = Console(width=150)
+        self.console = Console(width=200)
 
     def table(self, columns: list, rows: list[list]):
         table = Table(expand=False, leading=1)

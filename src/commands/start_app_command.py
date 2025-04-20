@@ -3,7 +3,6 @@ from commands.users.show_users_menu_command import ShowUsersMenuCommand
 from commands.sellers.show_sellers_menu_command import ShowSellersMenuCommand
 from commands.products.show_product_menu_command import ShowProductsMenuCommand
 from commands.purchases.show_purchases_menu_command import ShowPurchasesMenuCommand
-from repositories.session_repository import SessionRepository
 
 
 class StartAppCommand(Command):
@@ -33,8 +32,7 @@ class StartAppCommand(Command):
                 case "purchases-menu":
                     command = ShowPurchasesMenuCommand()
                 case "exit":
-                    session_repository = SessionRepository()
-                    session_repository.remove_session()
+                    self.session_repository.remove_session()
                     self.exit()
                     self.output.clear()
                     self.output.success("Até mais!")

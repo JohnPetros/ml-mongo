@@ -8,15 +8,14 @@ from repositories.session_repository import SessionRepository
 class Command(ABC):
     def __init__(self, subcommand=None):
         self.SESSION_CREDENTIALS = {"email": "admin@gmail.com", "password": "admin123"}
-        session_repository = SessionRepository()
-
-        if not session_repository.has_session():
-            self.__require_session()
-
         self.is_running = True
         self.subcommand = subcommand
         self.input = Input()
         self.output = Output()
+        self.session_repository = SessionRepository()
+
+        if not self.session_repository.has_session():
+            self.__require_session()
 
     @abstractmethod
     def run(self): ...
@@ -30,7 +29,6 @@ class Command(ABC):
 
     def __require_session(self):
         self.output.title("Login do usuário admnistrador")
-        self.repository.add_session()
 
         while True:
             email = self.input.text("Email:")
@@ -40,7 +38,7 @@ class Command(ABC):
                 self.SESSION_CREDENTIALS["email"] == email
                 and self.SESSION_CREDENTIALS["password"] == password
             ):
-                self.repository.add_session()
+                self.session_repository.add_session()
                 self.output.success("Login realizado com sucesso!")
                 break
             else:
