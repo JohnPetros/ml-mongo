@@ -1,5 +1,7 @@
 from commands.command import Command
 from repositories.users_repository import UsersRepository
+from formatters.cpf_formatter import CpfFormatter
+from formatters.phone_formatter import PhoneFormatter
 
 
 class ListUsersCommand(Command):
@@ -34,8 +36,8 @@ class ListUsersCommand(Command):
                     user.get_id(),
                     user.name,
                     user.email,
-                    user.cpf,
-                    user.phone,
+                    CpfFormatter.format(user.cpf),
+                    PhoneFormatter.format(user.phone),
                     user.address.street,
                     user.address.number,
                     user.address.neighbourhood,

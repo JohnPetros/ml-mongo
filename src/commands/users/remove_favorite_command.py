@@ -30,4 +30,4 @@ class RemoveFavoriteCommand(Command):
         self.repository.update(user)
         self.output.loading()
         self.output.clear()
-        self.output.success("Produto removido dos favoritos com sucesso!")
+        self.output.success("Usuário removido dos favoritos com sucesso!")

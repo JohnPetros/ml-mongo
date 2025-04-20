@@ -27,24 +27,34 @@ class UpdateSellerCommand(Command):
                 ("Voltar", "exit"),
             ],
         )
-
-        match value:
-            case "name":
-                name = self.input.text("Novo nome:")
-                seller.name = name
-            case "email":
-                email = self.input.text("Novo email:", validator=EmailValidator())
-                seller.email = email
-            case "cpf":
-                cpf = self.input.text("Novo CPF:", validator=CpfValidator())
-                seller.cpf = cpf
-            case "phone":
-                phone = self.input.text("Novo telefone:", validator=PhoneValidator())
-                seller.phone = phone
-            case "exit":
-                self.exit()
-                self.output.clear()
-                return
+        
+        while True:
+            match value:
+                case "name":
+                    name = self.input.text("Novo nome:")
+                    seller.name = name
+                case "email":
+                    email = self.input.text("Novo email:", validator=EmailValidator())
+                    existing_seller = self.repository.findByEmail(email)
+                    if existing_seller:
+                        self.output.error("Email já cadastrado")
+                        continue
+                    seller.email = email
+                case "cpf":
+                    cpf = self.input.text("Novo CPF:", validator=CpfValidator())
+                    existing_seller = self.repository.findByCpf(cpf)
+                    if existing_seller:
+                        self.output.error("CPF já cadastrado")
+                        continue
+                    seller.cpf = cpf
+                case "phone":
+                    phone = self.input.text("Novo telefone:", validator=PhoneValidator())
+                    seller.phone = phone
+                case "exit":
+                    self.exit()
+                    self.output.clear()
+                    return
+            break
 
         self.repository.update(seller)
         self.output.loading()

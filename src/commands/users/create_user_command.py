@@ -55,4 +55,4 @@ class CreateUserCommand(Command):
         self.repository.add(user)
         self.output.loading()
         self.output.clear()
-        self.output.success("Produto cadastrado com sucesso!")
+        self.output.success("Usuário cadastrado com sucesso!")
