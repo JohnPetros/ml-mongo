@@ -1,22 +1,22 @@
 from commands.command import Command
 from entities.product import Product
 from repositories.products_repository import ProductsRepository
-from repositories.sellers_repository import SellersRepository
 from commands.products.list_products_command import ListProductsCommand
 
 
 class SelectProductCommand(Command):
-    def __init__(self):
+    def __init__(self, is_cache_enable: bool = False):
         super().__init__()
+        self.is_cache_enable = is_cache_enable
         self.productsRepository = ProductsRepository()
 
     def run(self) -> Product:
-        products = self.productsRepository.findAll()
+        products = self.productsRepository.findAll(is_cache_enable=self.is_cache_enable)
         if not (len(products)):
             self.output.error("Nenhum produto encontrado. Cadastre um primeiro")
             return
 
-        command = ListProductsCommand()
+        command = ListProductsCommand(is_cache_enable=self.is_cache_enable)
         command.run()
 
         while self.is_running:

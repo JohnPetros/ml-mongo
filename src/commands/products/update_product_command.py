@@ -32,7 +32,7 @@ class UpdateProductCommand(Command):
                 product.name = name
             case "price":
                 price = self.input.text("Novo preço R$:", validator=FloatValidator())
-                product.price = price
+                product.price = float(price)
             case "description":
                 description = self.input.text("Nova descrição:")
                 product.description = description
@@ -43,6 +43,4 @@ class UpdateProductCommand(Command):
 
         self.repository.update(product)
         self.output.loading()
-        self.output.clear()
         self.output.success("Vendedor atualizado com sucesso!")
-        print(product)
