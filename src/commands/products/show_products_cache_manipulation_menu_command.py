@@ -1,6 +1,6 @@
 from commands.command import Command
 from commands.products.list_products_command import ListProductsCommand
-from commands.products.update_product_cache_command import UpdateProductCacheCommand
+from commands.products.update_product_command import UpdateProductCommand
 from commands.products.clear_products_cache_command import ClearProductsCacheCommand
 from commands.products.synchronize_products_database_with_cache_command import (
     SynchronizeProductsDatabaseWithCache,
@@ -28,7 +28,7 @@ class ShowProductsCacheManipulationMenuCommand(Command):
                 case "show-cache":
                     command = ListProductsCommand(is_cache_enable=True)
                 case "update-cache":
-                    command = UpdateProductCacheCommand(is_cache_enable=True)
+                    command = UpdateProductCommand(is_cache_enable=True)
                 case "synchronize-cache":
                     command = SynchronizeProductsDatabaseWithCache()
                 case "clear-cache":

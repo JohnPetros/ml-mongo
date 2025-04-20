@@ -9,12 +9,13 @@ from validators.zipcode_validator import ZipcodeValidator
 
 
 class UpdateUserCommand(Command):
-    def __init__(self):
+    def __init__(self, is_cache_enable: bool = False):
         super().__init__()
+        self.is_cache_enable = is_cache_enable
         self.repository = UsersRepository()
 
     def run(self):
-        command = SelectUserCommand()
+        command = SelectUserCommand(is_cache_enable=self.is_cache_enable)
         user = command.run()
         if user is None:
             return
@@ -40,27 +41,31 @@ class UpdateUserCommand(Command):
             ],
         )
 
-        while True: 
+        while True:
             match value:
                 case "name":
                     name = self.input.text("Novo nome:")
                     user.name = name
                 case "email":
                     email = self.input.text("Novo email:", validator=EmailValidator())
-                    existing_user = self.repository.findByEmail(email)
+                    existing_user = self.repository.findByEmail(
+                        email, self.is_cache_enable
+                    )
                     if existing_user:
                         self.output.error("Email já cadastrado")
                         continue
                     user.email = email
                 case "cpf":
                     cpf = self.input.text("Novo CPF:", validator=CpfValidator())
-                    existing_user = self.repository.findByCpf(cpf)
+                    existing_user = self.repository.findByCpf(cpf, self.is_cache_enable)
                     if existing_user:
                         self.output.error("CPF já cadastrado")
                         continue
                     user.cpf = cpf
                 case "phone":
-                    phone = self.input.text("Novo telefone:", validator=PhoneValidator())
+                    phone = self.input.text(
+                        "Novo telefone:", validator=PhoneValidator()
+                    )
                     user.phone = phone
                 case "zipcode":
                     zipcode = self.input.text("Novo CEP:", validator=ZipcodeValidator())
@@ -89,7 +94,6 @@ class UpdateUserCommand(Command):
                     return
             break
 
-        self.repository.update(user)
+        self.repository.update(user, is_cache_enable=self.is_cache_enable)
         self.output.loading()
-        self.output.clear()
         self.output.success("Vendedor atualizado com sucesso!")

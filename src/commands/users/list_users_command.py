@@ -5,12 +5,13 @@ from formatters.phone_formatter import PhoneFormatter
 
 
 class ListUsersCommand(Command):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, subcommand: Command = None, is_cache_enable: bool = False):
+        super().__init__(subcommand)
+        self.is_cache_enable = is_cache_enable
         self.repository = UsersRepository()
 
     def run(self):
-        users = self.repository.findAll()
+        users = self.repository.findAll(is_cache_enable=self.is_cache_enable)
 
         if not users:
             self.output.error("Nenhum usuário encontrado.")
@@ -49,4 +50,6 @@ class ListUsersCommand(Command):
                 for user in users
             ],
         )
+
+        self.run_subcommand()
         return users

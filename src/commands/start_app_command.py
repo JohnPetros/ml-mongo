@@ -32,7 +32,7 @@ class StartAppCommand(Command):
                 case "purchases-menu":
                     command = ShowPurchasesMenuCommand()
                 case "exit":
-                    self.session_repository.remove_session()
+                    # self.session_repository.remove_session()
                     self.exit()
                     self.output.clear()
                     self.output.success("Até mais!")

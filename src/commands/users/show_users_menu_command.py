@@ -6,6 +6,10 @@ from commands.users.delete_user_command import DeleteUserCommand
 from commands.users.list_favorites_command import ListFavoritesCommand
 from commands.users.add_favorite_command import AddFavoriteCommand
 from commands.users.remove_favorite_command import RemoveFavoriteCommand
+from commands.users.show_users_cache_menu_command import ShowUsersCacheMenuCommand
+from commands.users.show_users_cache_manipulation_menu_command import (
+    ShowUsersCacheManipulationMenuCommand,
+)
 
 
 class ShowUsersMenuCommand(Command):
@@ -23,6 +27,7 @@ class ShowUsersMenuCommand(Command):
                     ("Listar favoritos", "list-favorites"),
                     ("Adicionar favorito", "add-favorite"),
                     ("Remover favorito", "remove-favorite"),
+                    ("Cache de usuários", "cache-manipulation"),
                     ("Voltar", "exit"),
                 ],
             )
@@ -30,7 +35,7 @@ class ShowUsersMenuCommand(Command):
 
             match choice:
                 case "list-users":
-                    command = ListUsersCommand()
+                    command = ListUsersCommand(subcommand=ShowUsersCacheMenuCommand())
                 case "create-user":
                     command = CreateUserCommand()
                 case "update-user":
@@ -43,6 +48,8 @@ class ShowUsersMenuCommand(Command):
                     command = RemoveFavoriteCommand()
                 case "add-favorite":
                     command = AddFavoriteCommand()
+                case "cache-manipulation":
+                    command = ShowUsersCacheManipulationMenuCommand()
                 case "exit":
                     self.exit()
                 case _:

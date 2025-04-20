@@ -5,12 +5,13 @@ from commands.users.list_users_command import ListUsersCommand
 
 
 class SelectUserCommand(Command):
-    def __init__(self):
+    def __init__(self, is_cache_enable: bool = False):
         super().__init__()
+        self.is_cache_enable = is_cache_enable
         self.repository = UsersRepository()
 
     def run(self) -> User:
-        users = self.repository.findAll()
+        users = self.repository.findAll(is_cache_enable=self.is_cache_enable)
         command = ListUsersCommand()
         users = command.run()
         if not users:
