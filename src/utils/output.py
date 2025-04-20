@@ -26,6 +26,7 @@ class Output:
         with self.console.status("Carregando...", spinner="material"):
             sleep(2)
         self.console.print("\n")
+        self.clear()
 
     def success(self, message: str):
         self.console.print("\n")
@@ -38,6 +39,10 @@ class Output:
         text = Text(message, justify="center", style="red")
         self.console.print(text)
         self.console.print("\n")
+
+    def info(self, message: str):
+        text = Text(message, justify="center", style="orange")
+        self.console.print(text)
 
     def clear(self):
         self.console.clear()
