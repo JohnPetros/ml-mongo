@@ -1,5 +1,6 @@
 from commands.command import Command
 from repositories.products_repository import ProductsRepository
+from formatters.price_formatter import PriceFormatter
 
 
 class ListProductsCommand(Command):
@@ -21,7 +22,7 @@ class ListProductsCommand(Command):
                 [
                     product.get_id(),
                     product.name,
-                    f"R${product.price:.2f}",
+                    PriceFormatter.format(product.price),
                     product.description,
                     product.seller_name,
                 ]
