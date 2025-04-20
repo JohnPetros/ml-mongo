@@ -1,12 +1,12 @@
 from bson import ObjectId
 
 from entities.user import User, Address, Favorite
-from repositories.mongodb import db
+from repositories.mongodb import mongodb
 
 
 class UsersRepository:
     def __init__(self):
-        self.collection = db["usuario"]
+        self.collection = mongodb["usuario"]
 
     def add(self, user: User):
         self.collection.insert_one(
@@ -48,11 +48,11 @@ class UsersRepository:
         for user in documents:
             users.append(self.__map_user(user))
         return users
-    
+
     def findByEmail(self, email: str):
         document = self.collection.find_one({"email": email})
         return self.__map_seller(document[0]) if document else None
-    
+
     def findByCpf(self, cpf: str):
         document = self.collection.find_one({"cpf": cpf})
         return self.__map_seller(document[0]) if document else None

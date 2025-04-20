@@ -1,12 +1,12 @@
 from bson import ObjectId
 
 from entities.purchase import Purchase, Customer, PurchaseProduct
-from repositories.mongodb import db
+from repositories.mongodb import mongodb
 
 
 class PurchasesRepository:
     def __init__(self):
-        self.collection = db["compra"]
+        self.collection = mongodb["compra"]
 
     def add(self, purchase: Purchase):
         self.collection.insert_one(

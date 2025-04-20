@@ -1,12 +1,12 @@
 from bson import ObjectId
 
 from entities.seller import Seller
-from repositories.mongodb import db
+from repositories.mongodb import mongodb
 
 
 class SellersRepository:
     def __init__(self):
-        self.collection = db["vendedor"]
+        self.collection = mongodb["vendedor"]
 
     def add(self, seller: Seller):
         self.collection.insert_one(
@@ -27,11 +27,11 @@ class SellersRepository:
         for seller in documents:
             sellers.append(self.__map_seller(seller))
         return sellers
-    
+
     def findByEmail(self, email: str):
         document = self.collection.find_one({"email": email})
         return self.__map_seller(document[0]) if document else None
-    
+
     def findByCpf(self, cpf: str):
         document = self.collection.find_one({"cpf": cpf})
         return self.__map_seller(document[0]) if document else None
