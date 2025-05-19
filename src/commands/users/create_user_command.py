@@ -1,6 +1,5 @@
 from commands.command import Command
 from entities.user import User, Address
-from repositories.users_repository import UsersRepository
 from validators.email_validator import EmailValidator
 from validators.cpf_validator import CpfValidator
 from validators.phone_validator import PhoneValidator
@@ -9,21 +8,17 @@ from validators.zipcode_validator import ZipcodeValidator
 
 
 class CreateUserCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.repository = UsersRepository()
-
     def run(self):
         self.output.title("Cadastrando usuário")
 
         name = self.input.text("Nome:")
         email = self.input.text("Email:", validator=EmailValidator())
-        user = self.repository.findByEmail(email)
+        user = self.users_repository.findByEmail(email)
         if user:
             self.output.error("Email já cadastrado")
             return
         cpf = self.input.text("CPF:", validator=CpfValidator())
-        user = self.repository.findByCpf(cpf)
+        user = self.users_repository.findByCpf(cpf)
         if user:
             self.output.error("CPF já cadastrado")
             return

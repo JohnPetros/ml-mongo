@@ -1,14 +1,9 @@
 from commands.command import Command
-from repositories.purchases_repository import PurchasesRepository
 
 
 class ListPurchasesCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.repository = PurchasesRepository()
-
     def run(self):
-        purchases = self.repository.findAll()
+        purchases = self.purchases_repository.findAll()
 
         if not purchases:
             self.output.error("Nenhuma compra encontrada.")

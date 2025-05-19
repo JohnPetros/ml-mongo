@@ -2,7 +2,23 @@ from abc import ABC, abstractmethod
 
 from utils.input import Input
 from utils.output import Output
-from repositories.session_repository import SessionRepository
+from repositories.mongodb import (
+    MongoDbUsersRepository,
+    MongoDbProductsRepository,
+    MongoDbPurchasesRepository,
+    MongoDbSellersRepository,
+)
+from repositories.cassandra import (
+    CassandraUsersRepository,
+    CassandraProductsRepository,
+    CassandraPurchasesRepository,
+    CassandraSellersRepository,
+)
+from repositories.redis import (
+    RedisUsersRepository,
+    RedisProductsRepository,
+    RedisSessionRepository,
+)
 
 
 class Command(ABC):
@@ -12,7 +28,10 @@ class Command(ABC):
         self.subcommand = subcommand
         self.input = Input()
         self.output = Output()
-        self.session_repository = SessionRepository()
+        self.selected_database = "mongodb"
+        self.session_repository = RedisSessionRepository()
+        self.__set_repositories()
+        self.__set_cache_repositories()
 
         if not self.session_repository.has_session():
             self.__require_session()
@@ -43,3 +62,20 @@ class Command(ABC):
                 break
             else:
                 self.output.error("Email ou senha inválidos!")
+
+    def __set_repositories(self):
+        match self.selected_database:
+            case "mongodb":
+                self.users_repository = MongoDbUsersRepository()
+                self.products_repository = MongoDbProductsRepository()
+                self.purchases_repository = MongoDbPurchasesRepository()
+                self.sellers_repository = MongoDbSellersRepository()
+            case "cassandra":
+                self.users_repository = CassandraUsersRepository()
+                self.products_repository = CassandraProductsRepository()
+                self.purchases_repository = CassandraPurchasesRepository()
+                self.sellers_repository = CassandraSellersRepository()
+
+    def __set_cache_repositories(self):
+        self.users_cache_repository = RedisUsersRepository()
+        self.products_cache_repository = RedisProductsRepository()

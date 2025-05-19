@@ -1,5 +1,4 @@
 from commands.command import Command
-from repositories.users_repository import UsersRepository
 from commands.users.select_user_command import SelectUserCommand
 from validators.email_validator import EmailValidator
 from validators.cpf_validator import CpfValidator
@@ -12,7 +11,6 @@ class UpdateUserCommand(Command):
     def __init__(self, is_cache_enable: bool = False):
         super().__init__()
         self.is_cache_enable = is_cache_enable
-        self.repository = UsersRepository()
 
     def run(self):
         command = SelectUserCommand(is_cache_enable=self.is_cache_enable)
@@ -48,7 +46,7 @@ class UpdateUserCommand(Command):
                     user.name = name
                 case "email":
                     email = self.input.text("Novo email:", validator=EmailValidator())
-                    existing_user = self.repository.findByEmail(
+                    existing_user = self.users_repository.findByEmail(
                         email, self.is_cache_enable
                     )
                     if existing_user:
@@ -57,7 +55,9 @@ class UpdateUserCommand(Command):
                     user.email = email
                 case "cpf":
                     cpf = self.input.text("Novo CPF:", validator=CpfValidator())
-                    existing_user = self.repository.findByCpf(cpf, self.is_cache_enable)
+                    existing_user = self.users_repository.findByCpf(
+                        cpf, self.is_cache_enable
+                    )
                     if existing_user:
                         self.output.error("CPF já cadastrado")
                         continue
@@ -94,6 +94,6 @@ class UpdateUserCommand(Command):
                     return
             break
 
-        self.repository.update(user, is_cache_enable=self.is_cache_enable)
+        self.users_repository.update(user, is_cache_enable=self.is_cache_enable)
         self.output.loading()
         self.output.success("Vendedor atualizado com sucesso!")

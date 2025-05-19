@@ -1,5 +1,4 @@
 from commands.command import Command
-from repositories.users_repository import UsersRepository
 from formatters.cpf_formatter import CpfFormatter
 from formatters.phone_formatter import PhoneFormatter
 
@@ -8,10 +7,12 @@ class ListUsersCommand(Command):
     def __init__(self, subcommand: Command = None, is_cache_enable: bool = False):
         super().__init__(subcommand)
         self.is_cache_enable = is_cache_enable
-        self.repository = UsersRepository()
 
     def run(self):
-        users = self.repository.findAll(is_cache_enable=self.is_cache_enable)
+        if self.is_cache_enable:
+            users = self.users_cache_repository.findAll()
+        else:
+            users = self.users_repository.findAll()
 
         if not users:
             self.output.error("Nenhum usuário encontrado.")

@@ -6,7 +6,6 @@ from commands.sellers.delete_seller_command import DeleteSellerCommand
 
 
 class ShowSellersMenuCommand(Command):
-
     def run(self):
         self.output.title("Menu do Vendedor")
 

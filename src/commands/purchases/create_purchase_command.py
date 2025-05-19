@@ -1,15 +1,10 @@
 from commands.command import Command
 from entities.purchase import Purchase, PurchaseProduct
-from repositories.purchases_repository import PurchasesRepository
 from commands.users.select_user_command import SelectUserCommand
 from commands.products.select_product_command import SelectProductCommand
 
 
 class CreatePurchaseCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.repository = PurchasesRepository()
-
     def run(self):
         self.output.title("Fazendo compra")
         user = self.__select_user()
@@ -48,7 +43,7 @@ class CreatePurchaseCommand(Command):
 
         purchase = Purchase(customer=user, products=products, status="Pendente")
         purchase.calculate_total_price()
-        self.repository.add(purchase)
+        self.purchases_repository.add(purchase)
         self.output.loading()
         self.output.clear()
         self.output.success("Vendedor cadastrado com sucesso!")

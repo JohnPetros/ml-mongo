@@ -3,6 +3,7 @@ from commands.users.show_users_menu_command import ShowUsersMenuCommand
 from commands.sellers.show_sellers_menu_command import ShowSellersMenuCommand
 from commands.products.show_product_menu_command import ShowProductsMenuCommand
 from commands.purchases.show_purchases_menu_command import ShowPurchasesMenuCommand
+from commands.database.select_database_command import SelectDatabaseCommand
 
 
 class StartAppCommand(Command):
@@ -17,7 +18,8 @@ class StartAppCommand(Command):
                     ("2 - Área de produtos", "products-menu"),
                     ("3 - Área de vendedores", "sellers-menu"),
                     ("4 - Área de compras", "purchases-menu"),
-                    ("5 - Sair", "exit"),
+                    ("5 - Selecionar banco de dados", "select-database"),
+                    ("6 - Sair", "exit"),
                 ],
             )
             command = None
@@ -31,8 +33,10 @@ class StartAppCommand(Command):
                     command = ShowSellersMenuCommand()
                 case "purchases-menu":
                     command = ShowPurchasesMenuCommand()
+                case "select-database":
+                    command = SelectDatabaseCommand()
                 case "exit":
-                    # self.session_repository.remove_session()
+                    self.session_repository.remove_session()
                     self.exit()
                     self.output.clear()
                     self.output.success("Até mais!")

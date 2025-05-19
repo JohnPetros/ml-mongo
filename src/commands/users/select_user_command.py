@@ -1,19 +1,18 @@
 from commands.command import Command
 from entities.user import User
-from repositories.users_repository import UsersRepository
-from commands.users.list_users_command import ListUsersCommand
 
 
 class SelectUserCommand(Command):
     def __init__(self, is_cache_enable: bool = False):
         super().__init__()
         self.is_cache_enable = is_cache_enable
-        self.repository = UsersRepository()
 
     def run(self) -> User:
-        users = self.repository.findAll(is_cache_enable=self.is_cache_enable)
-        command = ListUsersCommand()
-        users = command.run()
+        if self.is_cache_enable:
+            users = self.users_cache_repository.findAll()
+        else:
+            users = self.users_repository.findAll()
+
         if not users:
             return
 

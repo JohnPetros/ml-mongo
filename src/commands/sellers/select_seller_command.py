@@ -1,17 +1,11 @@
 from commands.command import Command
 from entities.seller import Seller
-from repositories.sellers_repository import SellersRepository
 from commands.sellers.list_sellers_command import ListSellersCommand
 
 
 class SelectSellerCommand(Command):
-
-    def __init__(self):
-        super().__init__()
-        self.repository = SellersRepository()
-
     def run(self) -> Seller:
-        sellers = self.repository.findAll()
+        sellers = self.sellers_repository.findAll()
         if not sellers:
             self.output.error("Nenhum vendedor encontrado. Cadastre um primeiro")
             return

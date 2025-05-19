@@ -1,5 +1,4 @@
 from commands.command import Command
-from repositories.products_repository import ProductsRepository
 from commands.products.select_product_command import SelectProductCommand
 from validators.float_validator import FloatValidator
 
@@ -8,7 +7,6 @@ class UpdateProductCommand(Command):
     def __init__(self, is_cache_enable: bool = False):
         super().__init__()
         self.is_cache_enable = is_cache_enable
-        self.repository = ProductsRepository()
 
     def run(self):
         command = SelectProductCommand(self.is_cache_enable)
@@ -42,6 +40,6 @@ class UpdateProductCommand(Command):
                 self.output.clear()
                 return
 
-        self.repository.update(product, self.is_cache_enable)
+        self.products_repository.update(product, self.is_cache_enable)
         self.output.loading()
         self.output.success("Vendedor atualizado com sucesso!")

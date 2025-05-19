@@ -1,5 +1,4 @@
 from commands.command import Command
-from repositories.sellers_repository import SellersRepository
 from commands.sellers.select_seller_command import SelectSellerCommand
 from validators.phone_validator import PhoneValidator
 from validators.cpf_validator import CpfValidator
@@ -7,10 +6,6 @@ from validators.email_validator import EmailValidator
 
 
 class UpdateSellerCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self.repository = SellersRepository()
-
     def run(self):
         command = SelectSellerCommand()
         seller = command.run()
@@ -27,7 +22,7 @@ class UpdateSellerCommand(Command):
                 ("Voltar", "exit"),
             ],
         )
-        
+
         while True:
             match value:
                 case "name":
@@ -35,20 +30,22 @@ class UpdateSellerCommand(Command):
                     seller.name = name
                 case "email":
                     email = self.input.text("Novo email:", validator=EmailValidator())
-                    existing_seller = self.repository.findByEmail(email)
+                    existing_seller = self.sellers_repository.findByEmail(email)
                     if existing_seller:
                         self.output.error("Email já cadastrado")
                         continue
                     seller.email = email
                 case "cpf":
                     cpf = self.input.text("Novo CPF:", validator=CpfValidator())
-                    existing_seller = self.repository.findByCpf(cpf)
+                    existing_seller = self.sellers_repository.findByCpf(cpf)
                     if existing_seller:
                         self.output.error("CPF já cadastrado")
                         continue
                     seller.cpf = cpf
                 case "phone":
-                    phone = self.input.text("Novo telefone:", validator=PhoneValidator())
+                    phone = self.input.text(
+                        "Novo telefone:", validator=PhoneValidator()
+                    )
                     seller.phone = phone
                 case "exit":
                     self.exit()
@@ -56,7 +53,7 @@ class UpdateSellerCommand(Command):
                     return
             break
 
-        self.repository.update(seller)
+        self.sellers_repository.update(seller)
         self.output.loading()
         self.output.clear()
         self.output.success("Vendedor atualizado com sucesso!")
