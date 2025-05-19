@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:6.0
-    container_name: mongodb_mercado_livre
+    container_name: mongodb-mercado-livre
     restart: unless-stopped
     ports:
       - "27017:27017"
@@ -12,15 +12,29 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - mongodb-data:/data/db
+
   redis:
     image: redis:7.0-alpine
-    container_name: redis_mercado_livre
+    container_name: redis-mercado-livre
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis-data:/data
 
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra-mercado-livre
+    ports:
+      - "9042:9042"
+      - "7000:7000"
+      - "7199:7199"
+    environment:
+      - CASSANDRA_START_RPC=true
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+
 volumes:
   mongodb-data:
   redis-data:
+  cassandra-data:
