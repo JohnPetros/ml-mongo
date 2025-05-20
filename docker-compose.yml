@@ -8,8 +8,8 @@ services:
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
       - mongodb-data:/data/db
 
@@ -23,14 +23,16 @@ services:
       - redis-data:/data
 
   cassandra:
-    image: cassandra:4.1
+    image: cassandra:latest
     container_name: cassandra-mercado-livre
     ports:
       - "9042:9042"
-      - "7000:7000"
-      - "7199:7199"
     environment:
-      - CASSANDRA_START_RPC=true
+      - CASSANDRA_CLUSTER_NAME=MercadoLivreCluster
+      - CASSANDRA_AUTHENTICATOR=PasswordAuthenticator
+      - CASSANDRA_PASSWORD_SEEDER=true
+      - CASSANDRA_USERNAME=admin
+      - CASSANDRA_PASSWORD=root
     volumes:
       - cassandra-data:/var/lib/cassandra
 
