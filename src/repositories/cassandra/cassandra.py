@@ -14,31 +14,45 @@ cassandra.execute("""
     CREATE TABLE IF NOT EXISTS products (
         id UUID PRIMARY KEY,
         name TEXT,
-        price INT,
+        price DECIMAL,
         description TEXT,
         seller_id UUID,
         seller_name TEXT
-    ),
-    
+    )
+""")
+
+cassandra.execute("""
     CREATE TABLE IF NOT EXISTS sellers (
         id UUID PRIMARY KEY,
         name TEXT,
         email TEXT,
         cpf TEXT,
         phone TEXT
-    ),
-    
+    )
+""")
+
+cassandra.execute("CREATE INDEX IF NOT EXISTS index_email ON sellers (email);")
+cassandra.execute("CREATE INDEX IF NOT EXISTS index_cpf ON sellers (cpf);")
+
+
+cassandra.execute("""
     CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY,
         name TEXT,
-        cpf TEXT,
         email TEXT,
+        cpf TEXT,
         phone TEXT,
         address MAP<TEXT, TEXT>,
         favorites LIST<FROZEN<MAP<TEXT, TEXT>>>
     )
-    
-    CREATE TABLE IF NOT EXISTS ecommerce_ks.purchases (
+""")
+
+cassandra.execute("CREATE INDEX IF NOT EXISTS index_email ON users (email);")
+cassandra.execute("CREATE INDEX IF NOT EXISTS index_cpf ON users (cpf);")
+
+
+cassandra.execute("""
+    CREATE TABLE IF NOT EXISTS purchases (
         id UUID PRIMARY KEY,
         customer_id UUID,
         customer_name TEXT,

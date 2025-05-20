@@ -1,6 +1,7 @@
 from commands.command import Command
 from commands.products.select_product_command import SelectProductCommand
 from validators.float_validator import FloatValidator
+from formatters.price_formatter import PriceFormatter
 
 
 class UpdateProductCommand(Command):
@@ -19,7 +20,7 @@ class UpdateProductCommand(Command):
             "Qual valor deseja atualizar?",
             [
                 (f"Nome ({product.name})", "name"),
-                (f"Preço ({product.price})", "price"),
+                (f"Preço ({PriceFormatter.format(product.price)})", "price"),
                 (f"Descrição ({product.description})", "description"),
                 ("Voltar", "exit"),
             ],
@@ -31,7 +32,7 @@ class UpdateProductCommand(Command):
                 product.name = name
             case "price":
                 price = self.input.text("Novo preço R$:", validator=FloatValidator())
-                product.price = price
+                product.price = float(price)
             case "description":
                 description = self.input.text("Nova descrição:")
                 product.description = description
@@ -40,6 +41,6 @@ class UpdateProductCommand(Command):
                 self.output.clear()
                 return
 
-        self.products_repository.update(product, self.is_cache_enable)
+        self.products_repository.update(product)
         self.output.loading()
         self.output.success("Vendedor atualizado com sucesso!")

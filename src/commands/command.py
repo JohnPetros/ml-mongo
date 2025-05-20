@@ -26,10 +26,14 @@ class Command(ABC):
         self.SESSION_CREDENTIALS = {"email": "admin@gmail.com", "password": "admin123"}
         self.is_running = True
         self.subcommand = subcommand
-        self.input = Input()
-        self.output = Output()
-        self.selected_database = "mongodb"
         self.session_repository = RedisSessionRepository()
+        selected_database = self.session_repository.get_selected_database()
+        if not selected_database:
+            self.session_repository.set_selected_database("cassandra")
+            selected_database = "cassandra"
+        self.selected_database = selected_database
+        self.input = Input()
+        self.output = Output(selected_database)
         self.__set_repositories()
         self.__set_cache_repositories()
 
@@ -45,6 +49,11 @@ class Command(ABC):
     def run_subcommand(self):
         if self.subcommand:
             self.subcommand.run()
+
+    def select_database(self, database: str):
+        self.selected_database = database
+        self.session_repository.set_selected_database(database)
+        self.output = Output(database)
 
     def __require_session(self):
         self.output.title("Login do usuário admnistrador")

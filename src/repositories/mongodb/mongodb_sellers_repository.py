@@ -1,7 +1,7 @@
 from bson import ObjectId
 
 from entities.seller import Seller
-from repositories.mongodb import mongodb
+from repositories.mongodb.mongodb import mongodb
 
 
 class MongoDbSellersRepository:

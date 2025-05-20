@@ -1,5 +1,6 @@
 from entities.purchase import Purchase, Customer, PurchaseProduct
 from repositories.cassandra.cassandra import cassandra
+from uuid import UUID
 
 
 class CassandraPurchasesRepository:
@@ -7,7 +8,7 @@ class CassandraPurchasesRepository:
         cassandra.execute(
             "INSERT INTO purchases (id, status, total_price, products, customer) VALUES (%s, %s, %s, %s, %s)",
             (
-                purchase.id,
+                UUID(purchase.id),
                 purchase.status,
                 purchase.calculate_total_price(),
                 purchase.products,
@@ -28,17 +29,17 @@ class CassandraPurchasesRepository:
     def update(self, purchase: Purchase):
         cassandra.execute(
             "UPDATE purchases SET status = %s WHERE id = %s",
-            (purchase.status, purchase.id),
+            (purchase.status, UUID(purchase.id)),
         )
 
     def remove(self, purchase: Purchase):
-        cassandra.execute("DELETE FROM purchases WHERE id = %s", (purchase.id,))
+        cassandra.execute("DELETE FROM purchases WHERE id = %s", (UUID(purchase.id),))
 
     def __map_cassandra_purchase(self, row):
         return Purchase(
-            id=str(row["id"]),
-            status=row["status"],
-            totalPrice=row["customer"]["totalPrice"],
+            id=str(row.id),
+            status=row.status,
+            totalPrice=row.customer["totalPrice"],
             products=[
                 PurchaseProduct(
                     id=str(product["id"]),

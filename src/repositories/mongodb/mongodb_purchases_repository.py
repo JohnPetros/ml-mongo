@@ -1,7 +1,7 @@
 from bson import ObjectId
 
 from entities.purchase import Purchase, Customer, PurchaseProduct
-from repositories.mongodb import mongodb
+from repositories.mongodb.mongodb import mongodb
 
 
 class MongoDbPurchasesRepository:

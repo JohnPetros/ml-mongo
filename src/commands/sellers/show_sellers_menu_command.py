@@ -32,6 +32,7 @@ class ShowSellersMenuCommand(Command):
                 case "delete-seller":
                     command = DeleteSellerCommand()
                 case "exit":
+                    self.output.clear()
                     self.exit()
                 case _:
                     self.output.error("Opção inválida")

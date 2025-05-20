@@ -3,7 +3,7 @@ from json import dumps, loads
 
 from entities.product import Product
 from entities.seller import Seller
-from repositories.mongodb import mongodb
+from repositories.mongodb.mongodb import mongodb
 from repositories.redis.redis import redis
 
 

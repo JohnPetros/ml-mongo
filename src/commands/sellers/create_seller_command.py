@@ -8,6 +8,7 @@ from validators.email_validator import EmailValidator
 class CreateSellerCommand(Command):
     def run(self):
         self.output.title("Cadastrando vendedor")
+        print("Banco de dados selecionado:", self.selected_database)
         name = self.input.text("Nome:")
         email = self.input.text("Email:", validator=EmailValidator())
         seller = self.sellers_repository.findByEmail(email)

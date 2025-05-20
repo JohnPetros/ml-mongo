@@ -47,7 +47,7 @@ class CreateUserCommand(Command):
             ),
         )
 
-        self.repository.add(user)
+        self.users_repository.add(user)
         self.output.loading()
         self.output.clear()
         self.output.success("Usuário cadastrado com sucesso!")

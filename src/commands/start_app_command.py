@@ -36,7 +36,7 @@ class StartAppCommand(Command):
                 case "select-database":
                     command = SelectDatabaseCommand()
                 case "exit":
-                    self.session_repository.remove_session()
+                    # self.session_repository.remove_session()
                     self.exit()
                     self.output.clear()
                     self.output.success("Até mais!")

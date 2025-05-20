@@ -1,6 +1,6 @@
 from entities.product import Product
 from entities.seller import Seller
-
+from uuid import UUID
 from repositories.cassandra.cassandra import cassandra
 
 
@@ -9,11 +9,11 @@ class CassandraProductsRepository:
         cassandra.execute(
             "INSERT INTO products (id, name, price, description, seller_id, seller_name) VALUES (%s, %s, %s, %s, %s, %s)",
             (
-                product.id,
+                UUID(product.id),
                 product.name,
                 product.price,
                 product.description,
-                product.seller_id,
+                UUID(product.seller_id),
                 product.seller_name,
             ),
         )
@@ -33,13 +33,13 @@ class CassandraProductsRepository:
     def update(self, product: Product):
         cassandra.execute(
             "UPDATE products SET name = %s, price = %s, description = %s WHERE id = %s",
-            (product.name, product.price, product.description, product.id),
+            (product.name, product.price, product.description, UUID(product.id)),
         )
 
     def remove(self, product: Product):
         cassandra.execute(
             "DELETE FROM products WHERE id = %s",
-            (product.id,),
+            (UUID(product.id),),
         )
 
     def removeAll(self):
@@ -48,15 +48,15 @@ class CassandraProductsRepository:
     def removeAllBySeller(self, seller: Seller):
         cassandra.execute(
             "DELETE FROM products WHERE seller_id = %s",
-            (seller.id,),
+            (UUID(seller.id),),
         )
 
     def __map_cassandra_product(self, row):
         return Product(
-            name=row["name"],
-            price=float(row["price"]),
-            description=row["description"],
-            seller_id=str(row["seller_id"]),
-            seller_name=row["seller_name"],
-            id=str(row["id"]),
+            id=str(row.id),
+            name=row.name,
+            price=float(row.price),
+            description=row.description,
+            seller_id=str(row.seller_id),
+            seller_name=row.seller_name,
         )

@@ -2,35 +2,40 @@ from bson import ObjectId
 
 from entities.user import User, Address, Favorite
 from repositories.cassandra.cassandra import cassandra
+from uuid import UUID
 
 
 class CassandraUsersRepository:
     def add(self, user: User):
+        address_map = {
+            "street": user.address.street,
+            "neighbourhood": user.address.neighbourhood,
+            "number": user.address.number,
+            "city": user.address.city,
+            "state": user.address.state,
+            "zipcode": user.address.zipcode,
+            "complement": user.address.complement,
+        }
+
+        favorites_list = [
+            {
+                "id": str(favorite.id),
+                "name": favorite.name,
+                "price": str(favorite.price),
+            }
+            for favorite in (user.favorites or [])
+        ]
+
         cassandra.execute(
             "INSERT INTO users (id, name, email, cpf, phone, address, favorites) VALUES (%s, %s, %s, %s, %s, %s, %s)",
             (
-                user.id,
+                UUID(user.id),
                 user.name,
                 user.email,
                 user.cpf,
                 user.phone,
-                user.address.street,
-                user.address.neighbourhood,
-                user.address.number,
-                user.address.city,
-                user.address.state,
-                user.address.zipcode,
-                user.address.complement,
-                [
-                    {
-                        "_id": ObjectId(favorite.id),
-                        "name": favorite.name,
-                        "price": favorite.price,
-                    }
-                    for favorite in user.favorites
-                ]
-                if user.favorites
-                else [],
+                address_map,
+                favorites_list,
             ),
         )
 
@@ -39,24 +44,47 @@ class CassandraUsersRepository:
             self.add(user)
 
     def findAll(self) -> list[User]:
-        documents = cassandra.execute("SELECT * FROM users")
-        if not documents:
+        rows = cassandra.execute("SELECT * FROM users")
+        if not rows:
             return []
 
         users = []
-        for user in documents:
+        for user in rows:
             users.append(self.__map_cassandra_user(user))
         return users
 
     def findByEmail(self, email: str):
-        document = cassandra.execute("SELECT * FROM users WHERE email = %s", (email,))
-        return self.__map_cassandra_user(document) if document else None
+        row = cassandra.execute(
+            "SELECT * FROM users WHERE email = %s ALLOW FILTERING", (email,)
+        )
+        return self.__map_cassandra_user(row[0]) if row else None
 
     def findByCpf(self, cpf: str):
-        document = cassandra.execute("SELECT * FROM users WHERE cpf = %s", (cpf,))
-        return self.__map_cassandra_user(document) if document else None
+        row = cassandra.execute(
+            "SELECT * FROM users WHERE cpf = %s ALLOW FILTERING", (cpf,)
+        )
+        return self.__map_cassandra_user(row[0]) if row else None
 
     def update(self, user: User):
+        address_map = {
+            "street": user.address.street,
+            "neighbourhood": user.address.neighbourhood,
+            "number": user.address.number,
+            "city": user.address.city,
+            "state": user.address.state,
+            "zipcode": user.address.zipcode,
+            "complement": user.address.complement,
+        }
+
+        favorites_list = [
+            {
+                "id": str(favorite.id),
+                "name": favorite.name,
+                "price": str(favorite.price),
+            }
+            for favorite in (user.favorites or [])
+        ]
+
         cassandra.execute(
             "UPDATE users SET name = %s, email = %s, cpf = %s, phone = %s, address = %s, favorites = %s WHERE id = %s",
             (
@@ -64,54 +92,40 @@ class CassandraUsersRepository:
                 user.email,
                 user.cpf,
                 user.phone,
-                user.address.street,
-                user.address.neighbourhood,
-                user.address.number,
-                user.address.city,
-                user.address.state,
-                user.address.zipcode,
-                user.address.complement,
-                [
-                    {
-                        "_id": ObjectId(favorite.id),
-                        "name": favorite.name,
-                        "price": favorite.price,
-                    }
-                    for favorite in user.favorites
-                ]
-                if user.favorites
-                else [],
+                address_map,
+                favorites_list,
+                UUID(user.id),
             ),
         )
 
     def remove(self, user: User):
-        cassandra.execute("DELETE FROM users WHERE id = %s", (user.id,))
+        cassandra.execute("DELETE FROM users WHERE id = %s", (UUID(user.id),))
 
     def removeAll(self):
         cassandra.execute("DELETE FROM users")
 
-    def __map_cassandra_user(self, document):
+    def __map_cassandra_user(self, row):
         return User(
-            name=document["name"],
-            email=document["email"],
-            cpf=document["cpf"],
-            phone=document["phone"],
+            name=row.name,
+            email=row.email,
+            cpf=row.cpf,
+            phone=row.phone,
             address=Address(
-                street=document["address"]["street"],
-                neighbourhood=document["address"]["neighbourhood"],
-                number=document["address"]["number"],
-                city=document["address"]["city"],
-                state=document["address"]["state"],
-                zipcode=document["address"]["zipcode"],
-                complement=document["address"]["complement"],
+                street=row.address["street"],
+                neighbourhood=row.address["neighbourhood"],
+                number=row.address["number"],
+                city=row.address["city"],
+                state=row.address["state"],
+                zipcode=row.address["zipcode"],
+                complement=row.address["complement"],
             ),
             favorites=[
                 Favorite(
-                    id=str(favorite["_id"]),
+                    id=favorite["id"],
                     name=favorite["name"],
-                    price=favorite["price"],
+                    price=float(favorite["price"]),
                 )
-                for favorite in document.get("favorites", [])
+                for favorite in (row.favorites or [])
             ],
-            id=str(document["_id"]),
+            id=str(row.id),
         )

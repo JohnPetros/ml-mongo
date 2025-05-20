@@ -2,7 +2,7 @@ from bson import ObjectId
 from json import dumps, loads
 
 from entities.user import User, Address, Favorite
-from repositories.mongodb import mongodb
+from repositories.mongodb.mongodb import mongodb
 from repositories.redis.redis import redis
 
 

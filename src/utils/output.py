@@ -7,8 +7,9 @@ from rich.console import Console
 
 
 class Output:
-    def __init__(self):
+    def __init__(self, selected_database: str = None):
         self.console = Console(width=200)
+        self.selected_database = selected_database
 
     def table(self, columns: list, rows: list[list]):
         table = Table(expand=False, leading=1)
@@ -49,11 +50,15 @@ class Output:
 
     def title(self, title: str):
         self.clear()
+        if self.selected_database:
+            self.console.print(
+                f"[bright_yellow] Banco de dados selecionado: {self.selected_database.upper()} [/bright_yellow]",
+            )
         self.console.print(
             Panel.fit(
                 f"[bright_yellow] {title} [/bright_yellow]",
                 border_style="bright_blue",
                 padding=(1, 1),
-                title="[bold yellow]Mercado Livre 🤝",
+                title="[bold yellow]Mercado Livre 🤝 [/bold yellow]",
             )
         )

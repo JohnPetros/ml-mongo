@@ -22,7 +22,11 @@ class CreateProductCommand(Command):
         seller = command.run()
 
         product = Product(
-            name=name, price=price, description=description, seller_name=seller.name
+            name=name,
+            price=float(price),
+            description=description,
+            seller_id=seller.id,
+            seller_name=seller.name,
         )
 
         self.products_repository.add(product)

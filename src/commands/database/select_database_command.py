@@ -22,9 +22,11 @@ class SelectDatabaseCommand(Command):
             )
             match choice:
                 case "mongodb":
-                    self.selected_database = "mongodb"
+                    self.select_database("mongodb")
+                    self.exit()
                 case "cassandra":
-                    self.selected_database = "cassandra"
+                    self.select_database("cassandra")
+                    self.exit()
                 case "exit":
                     self.exit()
                 case _:

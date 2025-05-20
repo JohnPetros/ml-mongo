@@ -46,18 +46,20 @@ class UpdateUserCommand(Command):
                     user.name = name
                 case "email":
                     email = self.input.text("Novo email:", validator=EmailValidator())
-                    existing_user = self.users_repository.findByEmail(
-                        email, self.is_cache_enable
-                    )
+                    if self.is_cache_enable:
+                        existing_user = self.users_cache_repository.findByEmail(email)
+                    else:
+                        existing_user = self.users_repository.findByEmail(email)
                     if existing_user:
                         self.output.error("Email já cadastrado")
                         continue
                     user.email = email
                 case "cpf":
                     cpf = self.input.text("Novo CPF:", validator=CpfValidator())
-                    existing_user = self.users_repository.findByCpf(
-                        cpf, self.is_cache_enable
-                    )
+                    if self.is_cache_enable:
+                        existing_user = self.users_cache_repository.findByCpf(cpf)
+                    else:
+                        existing_user = self.users_repository.findByCpf(cpf)
                     if existing_user:
                         self.output.error("CPF já cadastrado")
                         continue
@@ -94,6 +96,9 @@ class UpdateUserCommand(Command):
                     return
             break
 
-        self.users_repository.update(user, is_cache_enable=self.is_cache_enable)
+        if self.is_cache_enable:
+            self.users_cache_repository.update(user)
+        else:
+            self.users_repository.update(user)
         self.output.loading()
         self.output.success("Vendedor atualizado com sucesso!")

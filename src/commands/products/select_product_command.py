@@ -9,9 +9,11 @@ class SelectProductCommand(Command):
         self.is_cache_enable = is_cache_enable
 
     def run(self) -> Product:
-        products = self.products_repository.findAll(
-            is_cache_enable=self.is_cache_enable
-        )
+        if self.is_cache_enable:
+            products = self.products_cache_repository.findAll()
+        else:
+            products = self.products_repository.findAll()
+
         if not (len(products)):
             self.output.error("Nenhum produto encontrado. Cadastre um primeiro")
             return
