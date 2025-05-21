@@ -19,6 +19,12 @@ from repositories.redis import (
     RedisProductsRepository,
     RedisSessionRepository,
 )
+from repositories.neo4j import (
+    Neo4jUsersRepository,
+    Neo4jProductsRepository,
+    Neo4jPurchasesRepository,
+    Neo4jSellersRepository,
+)
 
 
 class Command(ABC):
@@ -84,6 +90,11 @@ class Command(ABC):
                 self.products_repository = CassandraProductsRepository()
                 self.purchases_repository = CassandraPurchasesRepository()
                 self.sellers_repository = CassandraSellersRepository()
+            case "neo4j":
+                self.users_repository = Neo4jUsersRepository()
+                self.products_repository = Neo4jProductsRepository()
+                self.purchases_repository = Neo4jPurchasesRepository()
+                self.sellers_repository = Neo4jSellersRepository()
 
     def __set_cache_repositories(self):
         self.users_cache_repository = RedisUsersRepository()

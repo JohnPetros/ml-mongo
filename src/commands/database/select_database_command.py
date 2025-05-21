@@ -17,6 +17,10 @@ class SelectDatabaseCommand(Command):
                         f"Cassandra {'(Selecionado)' if self.selected_database == 'cassandra' else ''}",
                         "cassandra",
                     ),
+                    (
+                        f"Neo4j {'(Selecionado)' if self.selected_database == 'neo4j' else ''}",
+                        "neo4j",
+                    ),
                     ("Voltar", "exit"),
                 ],
             )
@@ -26,6 +30,9 @@ class SelectDatabaseCommand(Command):
                     self.exit()
                 case "cassandra":
                     self.select_database("cassandra")
+                    self.exit()
+                case "neo4j":
+                    self.select_database("neo4j")
                     self.exit()
                 case "exit":
                     self.exit()

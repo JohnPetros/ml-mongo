@@ -1,5 +1,3 @@
-from bson import ObjectId
-
 from entities.user import User, Address, Favorite
 from repositories.cassandra.cassandra import cassandra
 from uuid import UUID

@@ -1,13 +1,13 @@
 from commands.command import Command
-from entities.product import Product
+from entities.purchase import Purchase
 from commands.purchases.list_purchases_command import ListPurchasesCommand
 
 
 class SelectPurchaseCommand(Command):
-    def run(self) -> Product:
-        products = self.products_repository.findAll()
-        if not (len(products)):
-            self.output.error("Nenhum produto encontrado. Cadastre um primeiro")
+    def run(self) -> Purchase:
+        purchases = self.purchases_repository.findAll()
+        if not (len(purchases)):
+            self.output.error("Nenhuma compra encontrada. Cadastre uma primeiro")
             return
 
         sellers = self.sellers_repository.findAll()
@@ -19,14 +19,14 @@ class SelectPurchaseCommand(Command):
         command.run()
 
         while self.is_running:
-            product_id = self.input.text("ID do compra:")
+            purchase_id = self.input.text("ID da compra:")
 
-            product = list(
-                filter(lambda product: product.get_id() == product_id, products)
+            purchase = list(
+                filter(lambda purchase: purchase.get_id() == purchase_id, purchases)
             )
 
-            if len(product):
+            if len(purchase):
                 self.exit()
-                return product[0]
+                return purchase[0]
 
             self.output.error("Compra não encontrado")
