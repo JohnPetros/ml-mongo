@@ -5,7 +5,7 @@ cassandra = cluster.connect()
 
 cassandra.execute("""
     CREATE KEYSPACE IF NOT EXISTS mercado_livre
-    WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}
+    WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '2'}
 """)
 
 cassandra.set_keyspace("mercado_livre")
