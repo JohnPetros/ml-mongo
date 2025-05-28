@@ -22,19 +22,70 @@ services:
     volumes:
       - redis-data:/data
 
-  cassandra:
-    image: cassandra:latest
-    container_name: cassandra-mercado-livre
-    ports:
-      - "9042:9042"
+  cassandra-node1:
+    image: cassandra:4.1
+    container_name: cassandra-node1
+    hostname: cassandra-node1
     environment:
-      - CASSANDRA_CLUSTER_NAME=MercadoLivreCluster
-      - CASSANDRA_AUTHENTICATOR=PasswordAuthenticator
-      - CASSANDRA_PASSWORD_SEEDER=true
-      - CASSANDRA_USERNAME=admin
-      - CASSANDRA_PASSWORD=root
+      - CASSANDRA_SEEDS=cassandra-node1,cassandra-node2
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_LISTEN_ADDRESS=cassandra-node1
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node1
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_START_RPC=true
     volumes:
-      - cassandra-data:/var/lib/cassandra
+      - cassandra_data_1:/var/lib/cassandra
+    ports:
+      - "9042:9042" # CQL port
+      - "7000:7000" # Inter-node communication
+      - "7199:7199" # JMX port
+    networks:
+      - cassandra-network
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'describe cluster'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  cassandra-node2:
+    image: cassandra:4.1
+    container_name: cassandra-node2
+    hostname: cassandra-node2
+    environment:
+      - CASSANDRA_SEEDS=cassandra-node1,cassandra-node2
+      - CASSANDRA_CLUSTER_NAME=MyCluster
+      - CASSANDRA_DC=datacenter1
+      - CASSANDRA_RACK=rack2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_NUM_TOKENS=256
+      - CASSANDRA_LISTEN_ADDRESS=cassandra-node2
+      - CASSANDRA_BROADCAST_ADDRESS=cassandra-node2
+      - CASSANDRA_RPC_ADDRESS=0.0.0.0
+      - CASSANDRA_START_RPC=true
+    volumes:
+      - cassandra_data_2:/var/lib/cassandra
+    ports:
+      - "9043:9042" # CQL port (different host port)
+      - "7001:7000" # Inter-node communication
+      - "7200:7199" # JMX port
+    networks:
+      - cassandra-network
+    restart: unless-stopped
+    depends_on:
+      cassandra-node1:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "cqlsh -e 'describe cluster'" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
 
   neo4j:
     image: neo4j:5
@@ -49,6 +100,16 @@ services:
 
 volumes:
   mongodb-data:
+    driver: local
   redis-data:
-  cassandra-data:
+    driver: local
+  cassandra_data_1:
+    driver: local
+  cassandra_data_2:
+    driver: local
   neo4j-data:
+    driver: local
+
+networks:
+  cassandra-network:
+    driver: bridge
