@@ -40,9 +40,9 @@ services:
     volumes:
       - cassandra_data_1:/var/lib/cassandra
     ports:
-      - "9042:9042" # CQL port
-      - "7000:7000" # Inter-node communication
-      - "7199:7199" # JMX port
+      - "9042:9042"
+      - "7000:7000"
+      - "7199:7199"
     networks:
       - cassandra-network
     restart: unless-stopped
