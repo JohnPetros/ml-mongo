@@ -2,7 +2,7 @@ from commands.command import Command
 from commands.users.cache_users_command import CacheUsersCommand
 
 
-class SynchronizeUsersDatabaseWithCache(Command):
+class SynchronizeUsersDatabaseWithCacheCommand(Command):
     def __init__(self):
         super().__init__()
         self.command = CacheUsersCommand()
