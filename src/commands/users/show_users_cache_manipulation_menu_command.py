@@ -3,7 +3,7 @@ from commands.users.list_users_command import ListUsersCommand
 from commands.users.update_user_command import UpdateUserCommand
 from commands.users.clear_users_cache_command import ClearUsersCacheCommand
 from commands.users.synchronize_users_database_with_cache_command import (
-    SynchronizeUsersDatabaseWithCache,
+    SynchronizeUsersDatabaseWithCacheCommand,
 )
 
 
@@ -30,7 +30,7 @@ class ShowUsersCacheManipulationMenuCommand(Command):
                 case "update-cache":
                     command = UpdateUserCommand(is_cache_enable=True)
                 case "synchronize-cache":
-                    command = SynchronizeUsersDatabaseWithCache()
+                    command = SynchronizeUsersDatabaseWithCacheCommand()
                 case "clear-cache":
                     command = ClearUsersCacheCommand()
                 case "exit":

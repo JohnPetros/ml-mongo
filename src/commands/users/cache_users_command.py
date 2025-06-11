@@ -2,7 +2,7 @@ from commands.command import Command
 from repositories.users_repository import UsersRepository
 
 
-class SynchronizeUsersDatabaseWithCache(Command):
+class CacheUsersCommand(Command):
     def __init__(self):
         super().__init__()
         self.repository = UsersRepository()

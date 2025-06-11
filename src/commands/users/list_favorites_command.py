@@ -12,6 +12,9 @@ class ListFavoritesCommand(Command):
         command = SelectUserCommand()
         user = command.run()
 
+        if not user:
+            return
+
         if not user.favorites:
             self.output.error("Esse usuário não possui nenhum favorito.")
             return user

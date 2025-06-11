@@ -3,7 +3,7 @@ from commands.users.cache_users_command import CacheUsersCommand
 from repositories.users_repository import UsersRepository
 
 
-class SynchronizeUsersDatabaseWithCache(Command):
+class SynchronizeUsersDatabaseWithCacheCommand(Command):
     def __init__(self):
         super().__init__()
         self.command = CacheUsersCommand()
